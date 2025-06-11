@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -26,9 +27,21 @@ public class FirstFragment extends Fragment {
 
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.button.setOnClickListener(v -> {
+            String nome = binding.nome.getText().toString();
+            String matricula = binding.matricula.getText().toString();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("nome", nome);
+            bundle.putString("matricula", matricula);
+
+            NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
+        });
     }
 
     @Override

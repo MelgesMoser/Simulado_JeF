@@ -26,13 +26,20 @@ public class SecondFragment extends Fragment {
 
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(v ->
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
-        );
+        Bundle args = getArguments();
+        if (args != null) {
+            String nome = args.getString("nome");
+            String matricula = args.getString("matricula");
+        }
+
+//        binding.buttonSecond.setOnClickListener(v ->
+//                NavHostFragment.findNavController(SecondFragment.this)
+//                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
+//        );
     }
 
     @Override
