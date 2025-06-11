@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.germinare.jef_simulado.databinding.FragmentSecondBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 public class SecondFragment extends Fragment {
 
@@ -40,6 +41,16 @@ public class SecondFragment extends Fragment {
 //                NavHostFragment.findNavController(SecondFragment.this)
 //                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
 //        );
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAnchorView(R.id.fab)
+                        .setAction("Action", null).show();
+            }
+        });
+
     }
 
     @Override
