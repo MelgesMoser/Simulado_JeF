@@ -21,4 +21,12 @@
 
     <include layout="@layout/content_main" />
 
+    <Button
+        android:id="@+id/btnAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Área Administrativa"
+        android:layout_marginTop="16dp"/>
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
