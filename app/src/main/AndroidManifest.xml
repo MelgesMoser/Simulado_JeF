@@ -28,6 +28,9 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/ThemeOverlay.AppTheme.HighContrast" />
+        <activity android:name=".AdminLoginActivity"/>
+        <activity android:name=".AreaAdminActivity" />
+
     </application>
 
 </manifest>

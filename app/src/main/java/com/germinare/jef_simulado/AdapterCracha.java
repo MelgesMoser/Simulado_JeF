@@ -28,7 +28,7 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_nota, parent, false);
+                .inflate(R.layout.item_atendimento_admin, parent, false);
         return new MyViewHolder(viewItem);
     }
 
@@ -60,16 +60,16 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
             return true;
         });
 
-        // Alternar cor de fundo
-        if (position % 2 == 0) {
-            holder.fundo.setBackgroundColor(
-                    ContextCompat.getColor(holder.itemView.getContext(), R.color.blue)
-            );
-        } else {
-            holder.fundo.setBackgroundColor(
-                    ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent)
-            );
-        }
+//        // Alternar cor de fundo
+//        if (position % 2 == 0) {
+//            holder.fundo.setBackgroundColor(
+//                    ContextCompat.getColor(holder.itemView.getContext(), R.color.blue)
+//            );
+//        } else {
+//            holder.fundo.setBackgroundColor(
+//                    ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent)
+//            );
+//        }
     }
 
     @Override
@@ -88,7 +88,7 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
             numeroCracha = itemView.findViewById(R.id.numero_cracha);
             inicioAtendimento = itemView.findViewById(R.id.inicio_atendimento);
             fimAtendimento = itemView.findViewById(R.id.fim_atendimento);
-            fundo = itemView.findViewById(R.id.fundo);
+//            fundo = itemView.findViewById(R.id.fundo);
         }
     }
 }
