@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -27,40 +28,53 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View viewItem = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_nota, parent, false);
-        return new MyViewHolder(viewItem);
+        return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Cracha cracha = listaCracha.get(position);
 
-        // Corrigir: transformar int em String
-        holder.numeroCracha.setText(String.valueOf(cracha.getNumeroCracha()));
+        // Preencher o número do crachá
+        holder.numeroCracha.setText("Crachá Nº: " + cracha.getNumeroCracha());
 
-        // Opcional: formatar e exibir datas (se desejar)
+        // Formatador de datas
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
 
+        // Início do atendimento
         if (cracha.getInicioAtendimento() != null) {
-            holder.inicioAtendimento.setText(sdf.format(cracha.getInicioAtendimento()));
+            holder.inicioAtendimento.setText("Início: " + sdf.format(cracha.getInicioAtendimento()));
         } else {
             holder.inicioAtendimento.setText("Início: -");
         }
 
+        // Fim do atendimento
         if (cracha.getFimAtendimento() != null) {
-            holder.fimAtendimento.setText(sdf.format(cracha.getFimAtendimento()));
+            holder.fimAtendimento.setText("Fim: " + sdf.format(cracha.getFimAtendimento()));
         } else {
             holder.fimAtendimento.setText("Fim: -");
         }
 
-        // Long click para deletar
+        // Long Click → Remover crachá
         holder.itemView.setOnLongClickListener(v -> {
-            db.remover(listaCracha.get(holder.getAdapterPosition()), v.getContext());
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                db.removerCracha(listaCracha.get(currentPosition), v.getContext());
+            }
             return true;
         });
 
-        // Alternar cor de fundo
+        // (Opcional) Clique curto → Editar ou ação futura
+        holder.itemView.setOnClickListener(v -> {
+            Toast.makeText(v.getContext(),
+                    "Crachá " + cracha.getNumeroCracha() + " selecionado",
+                    Toast.LENGTH_SHORT).show();
+            // Aqui você pode abrir uma tela de detalhes, edição, etc.
+        });
+
+        // Alternância de cor no fundo
         if (position % 2 == 0) {
             holder.fundo.setBackgroundColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.blue)
@@ -77,11 +91,12 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
         return listaCracha.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView numeroCracha;
-        private TextView inicioAtendimento;
-        private TextView fimAtendimento;
-        private ConstraintLayout fundo;
+    // ViewHolder interno
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        private final TextView numeroCracha;
+        private final TextView inicioAtendimento;
+        private final TextView fimAtendimento;
+        private final ConstraintLayout fundo;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
