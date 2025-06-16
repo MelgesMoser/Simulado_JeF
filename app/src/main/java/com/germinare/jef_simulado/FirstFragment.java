@@ -1,12 +1,12 @@
 package com.germinare.jef_simulado;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -21,27 +21,37 @@ public class FirstFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.button.setOnClickListener(v -> {
-            String nome = binding.nome.getText().toString();
-            String matricula = binding.matricula.getText().toString();
+        binding.button.setOnClickListener(v -> enviarDadosParaSecondFragment());
+    }
 
-            Bundle bundle = new Bundle();
-            bundle.putString("nome", nome);
-            bundle.putString("matricula", matricula);
+    private void enviarDadosParaSecondFragment() {
+        String nome = binding.nome.getText().toString().trim();
+        String matricula = binding.matricula.getText().toString().trim();
 
-            NavHostFragment.findNavController(FirstFragment.this)
-                    .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
-        });
+        if (TextUtils.isEmpty(nome)) {
+            binding.nome.setError("Digite seu nome");
+            return;
+        }
+
+        if (TextUtils.isEmpty(matricula) || !matricula.matches("\\d{8}")) {
+            binding.matricula.setError("Digite uma matrícula válida com 8 dígitos");
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("nome", nome);
+        bundle.putString("matricula", matricula);
+
+        NavHostFragment.findNavController(FirstFragment.this)
+                .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
     }
 
     @Override
@@ -49,5 +59,4 @@ public class FirstFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }

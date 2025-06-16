@@ -4,11 +4,11 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -27,49 +27,54 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View viewItem = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_atendimento_admin, parent, false);
-        return new MyViewHolder(viewItem);
+        return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Cracha cracha = listaCracha.get(position);
 
-        // Corrigir: transformar int em String
-        holder.numeroCracha.setText(String.valueOf(cracha.getNumeroCracha()));
 
-        // Opcional: formatar e exibir datas (se desejar)
+        holder.numeroCracha.setText("Crachá Nº: " + cracha.getNumeroCracha());
+
+        // Formatador de datas
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
 
+
         if (cracha.getInicioAtendimento() != null) {
-            holder.inicioAtendimento.setText(sdf.format(cracha.getInicioAtendimento()));
+            holder.inicioAtendimento.setText("Início: " + sdf.format(cracha.getInicioAtendimento()));
         } else {
             holder.inicioAtendimento.setText("Início: -");
         }
 
+
         if (cracha.getFimAtendimento() != null) {
-            holder.fimAtendimento.setText(sdf.format(cracha.getFimAtendimento()));
+            holder.fimAtendimento.setText("Fim: " + sdf.format(cracha.getFimAtendimento()));
         } else {
             holder.fimAtendimento.setText("Fim: -");
         }
 
-        // Long click para deletar
-        holder.itemView.setOnLongClickListener(v -> {
-            db.remover(listaCracha.get(holder.getAdapterPosition()), v.getContext());
-            return true;
+
+        holder.botaoExcluir.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                int numeroCracha = cracha.getNumeroCracha();
+                db.removerAtendimento(numeroCracha, v.getContext());
+
+
+                listaCracha.remove(currentPosition);
+                notifyItemRemoved(currentPosition);
+            }
         });
 
-//        // Alternar cor de fundo
-//        if (position % 2 == 0) {
-//            holder.fundo.setBackgroundColor(
-//                    ContextCompat.getColor(holder.itemView.getContext(), R.color.blue)
-//            );
-//        } else {
-//            holder.fundo.setBackgroundColor(
-//                    ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent)
-//            );
-//        }
+
+        holder.itemView.setOnClickListener(v -> {
+            Toast.makeText(v.getContext(),
+                    "Crachá " + cracha.getNumeroCracha() + " selecionado",
+                    Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -77,18 +82,18 @@ public class AdapterCracha extends RecyclerView.Adapter<AdapterCracha.MyViewHold
         return listaCracha.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView numeroCracha;
-        private TextView inicioAtendimento;
-        private TextView fimAtendimento;
-        private ConstraintLayout fundo;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        private final TextView numeroCracha;
+        private final TextView inicioAtendimento;
+        private final TextView fimAtendimento;
+        private final Button botaoExcluir;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             numeroCracha = itemView.findViewById(R.id.numero_cracha);
             inicioAtendimento = itemView.findViewById(R.id.inicio_atendimento);
             fimAtendimento = itemView.findViewById(R.id.fim_atendimento);
-//            fundo = itemView.findViewById(R.id.fundo);
+            botaoExcluir = itemView.findViewById(R.id.buttonExcluir);
         }
     }
 }
